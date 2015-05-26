@@ -25,9 +25,22 @@
 
         <dependency>
             <groupId>org.bitbucket.mstrobel</groupId>
-            <artifactId>procyon-decompiler</artifactId>
+            <artifactId>procyon-compilertools</artifactId>
             <version>0.5.28</version>
         </dependency>
+
     </dependencies>
 
+    <build>
+        <finalName>app-reader</finalName>
+        <plugins>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.7</source>
+                    <target>1.7</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>
