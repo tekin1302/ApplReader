@@ -23,6 +23,7 @@ public class ReaderServlet extends HttpServlet {
         String logs = req.getParameter("logs");
         String log = req.getParameter("log");
 
+
         if (list != null){
             List<JSTreeNode> jsTreeNodes = ReaderUtils.getFiles(list);
             try(ObjectOutputStream oos = new ObjectOutputStream(resp.getOutputStream())){

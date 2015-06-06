@@ -29,6 +29,7 @@ public class ReaderUtils {
         instance.setRoot(path.toString() + "/webapps");
         instance.setLogsRoot(path.toString() + "/logs");
     }
+
     /*
         method used to decompile a class
          */
