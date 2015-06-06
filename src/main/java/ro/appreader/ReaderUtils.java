@@ -4,12 +4,11 @@ import com.strobel.decompiler.Decompiler;
 import com.strobel.decompiler.DecompilerSettings;
 import com.strobel.decompiler.PlainTextOutput;
 import ro.common.JSTreeNode;
+import ro.common.LogFile;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.Writer;
+import java.io.*;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -22,9 +21,17 @@ import java.util.List;
  */
 public class ReaderUtils {
 
+    static {
+        Path path = Paths.get("");
+        path = path.toAbsolutePath();
+        path = path.getParent();
+        DProperties instance = DProperties.getInstance();
+        instance.setRoot(path.toString() + "/webapps");
+        instance.setLogsRoot(path.toString() + "/logs");
+    }
     /*
-    method used to decompile a class
-     */
+        method used to decompile a class
+         */
     public static Writer decompile(String urlPath, Writer writer)throws IOException {
         final DecompilerSettings settings = DecompilerSettings.javaDefaults();
         DProperties rootPath = DProperties.getInstance();
@@ -59,12 +66,7 @@ public class ReaderUtils {
 
         if (root == null || root.equals("#")) root = "";
         DProperties dProperties = DProperties.getInstance();
-        if (dProperties.getRoot() == null){
-            Path path = Paths.get("");
-            path = path.toAbsolutePath();
-            path = path.getParent();
-            dProperties.setRoot(path.toString() + "/webapps");
-        };
+
         Path path = Paths.get(dProperties.getRoot() + "/" + root);
         try(DirectoryStream<Path> directoryStream = Files.newDirectoryStream(path)){
             for (Path childPath : directoryStream) {
@@ -101,5 +103,20 @@ public class ReaderUtils {
         }
 
         return null;
+    }
+
+    public static String[] getLogFiles() {
+        List<LogFile> logFiles = new ArrayList<>();
+        File logsFolder = new File(DProperties.getInstance().getLogsRoot());
+        if (logsFolder.exists() && logsFolder.isDirectory()) {
+            return logsFolder.list();
+        }
+        return null;
+    }
+
+    public static String getLogFile(String log) throws IOException {
+        Path path = Paths.get(DProperties.getInstance().getLogsRoot() + "/" + log);
+        byte[] bytes = Files.readAllBytes(path);
+        return new String(bytes, "UTF-8");
     }
 }

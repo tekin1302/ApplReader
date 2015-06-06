@@ -5,6 +5,7 @@ package ro.appreader;
  */
 public class DProperties {
     private String root;
+    private String logsRoot;
     private static DProperties instance;
 
     private DProperties(){
@@ -23,5 +24,13 @@ public class DProperties {
 
     public void setRoot(String root) {
         this.root = root;
+    }
+
+    public String getLogsRoot() {
+        return logsRoot;
+    }
+
+    public void setLogsRoot(String logsRoot) {
+        this.logsRoot = logsRoot;
     }
 }
