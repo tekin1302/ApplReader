@@ -76,19 +76,26 @@ public class ReaderServlet extends HttpServlet {
         DProperties dProperties = DProperties.getInstance();
         String rootPath = dProperties.getRoot();
         String filePath = rootPath + obj.getUrl();
-        File tempFile = new File(UUID.randomUUID().toString());
 
+        String tempFilePath = filePath.substring(0, filePath.replace("\\", "/").lastIndexOf('/'));
+        File tempFile = new File(tempFilePath + "/" + UUID.randomUUID().toString());
+        File newFile;
         try(BufferedOutputStream bw = new BufferedOutputStream(new FileOutputStream(tempFile))){
             bw.write(obj.getContent());
 
             // e gata, e bine
-            File newFile = new File(filePath);
-            if (!tempFile.renameTo(newFile)) {
-                throw new Exception("Nu am putut redenumi fisierul");
-            }
+            newFile = new File(filePath);
+
         } catch (Exception e) {
             e.printStackTrace();
             return e.getMessage();
+        }
+        if (!newFile.delete()){
+            return ("Nu am putut sterge fisierul");
+        }
+
+        if (!tempFile.renameTo(newFile)) {
+            return ("Nu am putut redenumi fisierul");
         }
         return null;
     }
