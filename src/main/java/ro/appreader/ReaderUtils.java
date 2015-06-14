@@ -26,8 +26,8 @@ public class ReaderUtils {
         path = path.toAbsolutePath();
         path = path.getParent();
         DProperties instance = DProperties.getInstance();
-        instance.setRoot(path.toString() + "/webapps");
-        instance.setLogsRoot(path.toString() + "/logs");
+        instance.setRoot(path.toString() + "\\webapps");
+        instance.setLogsRoot(path.toString() + "\\logs");
     }
 
     /*
@@ -50,11 +50,14 @@ public class ReaderUtils {
     public static ServletOutputStream getContent(String urlpath, ServletOutputStream outputStream) throws IOException {
         DProperties rootPath = DProperties.getInstance();
         String path = rootPath.getRoot() + urlpath;
-        try(FileInputStream fis = new FileInputStream(path)){
-            int c;
-            byte[] buffer = new byte[1024];
-            while((c = fis.read(buffer)) != -1){
-                outputStream.write(buffer, 0, c);
+        File file = new File(path);
+        if (file.isFile()) {
+            try (FileInputStream fis = new FileInputStream(file)) {
+                int c;
+                byte[] buffer = new byte[1024];
+                while ((c = fis.read(buffer)) != -1) {
+                    outputStream.write(buffer, 0, c);
+                }
             }
         }
         return outputStream;
@@ -68,11 +71,11 @@ public class ReaderUtils {
         if (root == null || root.equals("#")) root = "";
         DProperties dProperties = DProperties.getInstance();
 
-        Path path = Paths.get(dProperties.getRoot() + "/" + root);
+        Path path = Paths.get(dProperties.getRoot() + "\\" + root);
         try(DirectoryStream<Path> directoryStream = Files.newDirectoryStream(path)){
             for (Path childPath : directoryStream) {
                 JSTreeNode jsTreeNode = new JSTreeNode();
-                jsTreeNode.setId(root + "/" + childPath.getFileName());
+                jsTreeNode.setId(root + "\\" + childPath.getFileName());
                 jsTreeNode.setText(childPath.getFileName().toString());
                 jsTreeNode.setChildren(childPath.toFile().list()!= null ? true : false);
                 jsTreeNode.setType(getType(childPath));
@@ -116,7 +119,7 @@ public class ReaderUtils {
     }
 
     public static String getLogFile(String log) throws IOException {
-        Path path = Paths.get(DProperties.getInstance().getLogsRoot() + "/" + log);
+        Path path = Paths.get(DProperties.getInstance().getLogsRoot() + "\\" + log);
         byte[] bytes = Files.readAllBytes(path);
         return new String(bytes, "UTF-8");
     }

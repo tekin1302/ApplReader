@@ -77,8 +77,8 @@ public class ReaderServlet extends HttpServlet {
         String rootPath = dProperties.getRoot();
         String filePath = rootPath + obj.getUrl();
 
-        String tempFilePath = filePath.substring(0, filePath.replace("\\", "/").lastIndexOf('/'));
-        File tempFile = new File(tempFilePath + "/" + UUID.randomUUID().toString());
+        String tempFilePath = filePath.substring(0, filePath.lastIndexOf('\\'));
+        File tempFile = new File(tempFilePath + "\\" + UUID.randomUUID().toString());
         File newFile;
         try(BufferedOutputStream bw = new BufferedOutputStream(new FileOutputStream(tempFile))){
             bw.write(obj.getContent());
@@ -106,11 +106,11 @@ public class ReaderServlet extends HttpServlet {
         String javaFilePath = createJavaFile(rootPath + filepath, content);
         final JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
         List<String> optionList = new ArrayList<String>();
-        String appName = filepath.substring(1, filepath.indexOf('/', 1));
+        String appName = filepath.substring(1, filepath.indexOf('\\', 1));
 
-        String libPath = dProperties.getRoot() + "/" + appName + "/WEB-INF/lib/*";
-        String classesPath = dProperties.getRoot() + "/" + appName + "/WEB-INF/classes/";
-        String tomcatLibPath = rootPath.substring(0, rootPath.lastIndexOf('/')) + "/lib/*";
+        String libPath = dProperties.getRoot() + "\\" + appName + "\\WEB-INF\\lib\\*";
+        String classesPath = dProperties.getRoot() + "\\" + appName + "\\WEB-INF\\classes\\";
+        String tomcatLibPath = rootPath.substring(0, rootPath.lastIndexOf('\\')) + "\\lib\\*";
 
         String classPath = buildClassPath(libPath , classesPath, tomcatLibPath);
         optionList.add("-classpath");
